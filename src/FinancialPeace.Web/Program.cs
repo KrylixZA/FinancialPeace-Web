@@ -20,14 +20,8 @@ namespace FinancialPeace.Web
                 {
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
                 });
-            var temp = new AuthenticationHttpClient(new HttpClient
-                {
-                    BaseAddress = new Uri(ApiBaseUrl)
-                });
-            var token = await temp.GetTokenAsync();
-            
             builder.Services.AddScoped(
-                _ => new CurrencyHttpClient(
+                _ => new CurrenciesHttpClient(
                     ApiBaseUrl,
                     new AuthenticationHttpClient(new HttpClient
                     {

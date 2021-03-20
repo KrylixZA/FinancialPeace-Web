@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace FinancialPeace.Web.Models
+namespace FinancialPeace.Web.Models.Responses
 {
     public class GetCurrencyResponse
     {

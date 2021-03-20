@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace FinancialPeace.Web.Models
+namespace FinancialPeace.Web.Models.Responses
 {
     public class JwtResponse
     {

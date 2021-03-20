@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FinancialPeace.Web.Models;
+using FinancialPeace.Web.Models.Responses;
 using Newtonsoft.Json;
 
 namespace FinancialPeace.Web.HttpClients
 {
-    public class CurrencyHttpClient
+    public class CurrenciesHttpClient
     {
         private const string ControllerRoute = "currencies";
 
         private readonly string _apiBaseUrl;
         private readonly AuthenticationHttpClient _authenticationHttpClient;
 
-        public CurrencyHttpClient(string apiBaseUrl, AuthenticationHttpClient authenticationHttpClient)
+        public CurrenciesHttpClient(string apiBaseUrl, AuthenticationHttpClient authenticationHttpClient)
         {
             _apiBaseUrl = apiBaseUrl;
             _authenticationHttpClient = authenticationHttpClient;
