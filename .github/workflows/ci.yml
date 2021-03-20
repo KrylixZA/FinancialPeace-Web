@@ -38,7 +38,7 @@ jobs:
         sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
 
   dotnet:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: 'Checkout'
