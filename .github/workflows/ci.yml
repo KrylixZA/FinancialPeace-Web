@@ -10,6 +10,7 @@ on:
 
 env:
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     BRANCH_NAME: ${GITHUB_REF#refs/heads/}
     MAJOR_VERSION: 1
     MINOR_VERSION: 0
