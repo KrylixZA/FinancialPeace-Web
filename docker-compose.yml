@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  financialpeace-database:
+    image: krylixza/financialpeace-database:latest
+    container_name: financialpeace-database
+    networks:
+      - financialpeace
+    ports:
+      - 3306:3306
+
+  financialpeace-web-api:
+    image: krylixza/financialpeace-web-api:latest
+    container_name: financialpeace-web-api
+    depends_on: 
+      - financialpeace-database
+    networks:
+      - financialpeace
+    ports: 
+      - 5000:5000
+    restart: any
+
+    financialpeace-web-api:
+    image: krylixza/financialpeace-web-api:latest
+    container_name: financialpeace-web-api
+    depends_on: 
+      - financialpeace-database
+    networks:
+      - financialpeace
+    ports: 
+      - 5000:5000
+
+  financialpeace-web:
+    image: krylixza/financialpeace-web:latest
+    container_name: financialpeace-web
+    depends_on: 
+      - financialpeace-database
+      - financialpeace-web-api
+    ports:
+      - 50000:50000
+
+networks:
+  financialpeace:
