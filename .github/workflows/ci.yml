@@ -34,6 +34,8 @@ jobs:
         sonarProjectName:  FinancialPeace-Web
         sonarOrganization: krylixza
         dotnetBuildArguments: ./src
+        dotnetTestArguments: ./src --logger trx --output "../TestResults/" -p:CollectCoverage=true -p:CoverletOutputFormat="json%2copencover" -p:CoverletOutput="../TestResults/" -p:MergeWith="../TestResults/coverage.json"
+        sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
 
   docker:
     runs-on: ubuntu-latest
