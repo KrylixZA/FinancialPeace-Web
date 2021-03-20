@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - '**'
+  pull_request:
+    branches:
+    - '**'
+
+env:
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    BRANCH_NAME: ${GITHUB_REF#refs/heads/}
+    MAJOR_VERSION: 1
+    MINOR_VERSION: 0
+    PATCH_VERSION: 0
+    BUILD_VERSION: $MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION.${GITHUB_RUN_NUMBER}
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: SonarCloud
+      uses: highbyte/sonarscan-dotnet@2.0
+      with:
+        sonarProjectKey: FinancialPeace-Web
+        sonarProjectName:  FinancialPeace-Web
+        sonarOrganization: krylixza
+        dotnetBuildArguments: ./src
+        dotnetTestArguments: ./src --logger trx --output "../TestResults/" -p:CollectCoverage=true -p:CoverletOutputFormat="json%2copencover" -p:CoverletOutput="../TestResults/" -p:MergeWith="../TestResults/coverage.json"
+        sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+
+  dotnet:
+    run-on: ubuntu-latest
+
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Publish Web Application
+      run: |
+        dotnet publish ./src/FinancialPeace.Web/FinancialPeace.Web.csproj --configuration Release
