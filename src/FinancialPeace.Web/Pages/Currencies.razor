@@ -1,0 +1,46 @@
+@page "/Currencies"
+@using FinancialPeace.Web.Models
+@using FinancialPeace.Web.HttpClients
+@inject CurrencyHttpClient HttpClient
+
+<h1>Currencies</h1>
+
+@if (_currencies != null)
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Country Currency Code</th>
+            <th>Rand Exchange Rate</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var currency in _currencies)
+                {
+                    <tr>
+                        <td>@currency.Name</td>
+                        <td>@currency.Country</td>
+                        <td>@currency.CountryCurrencyCode</td>
+                        <td>@currency.RandExchangeRate</td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+
+@code {
+    private IEnumerable<Currency> _currencies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currencies = await HttpClient.GetCurrenciesAsync();
+    }
+}
