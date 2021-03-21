@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using FinancialPeace.Web.Models;
+using FinancialPeace.Web.Models.Requests;
 using FinancialPeace.Web.Models.Responses;
 using Newtonsoft.Json;
 
@@ -38,6 +40,28 @@ namespace FinancialPeace.Web.HttpClients
             response.EnsureSuccessStatusCode();
             var currencies = JsonConvert.DeserializeObject<GetCurrencyResponse>(await response.Content.ReadAsStringAsync());
             return currencies.Currencies;
+        }
+
+        public async Task AddCurrencyAsync(AddCurrencyRequest request)
+        {
+            var token = await _authenticationHttpClient.GetTokenAsync();
+            var apiRequest = new HttpRequestMessage
+            {
+                Headers =
+                {
+                    {"Authorization", $"Bearer {token}"}
+                },
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{_apiBaseUrl}/{ControllerRoute}"),
+                Content = new StringContent(
+                    JsonConvert.SerializeObject(request),
+                    Encoding.UTF8,
+                    "application/json")
+                
+            };
+            var httpClient = new HttpClient();
+            var response = await httpClient.SendAsync(apiRequest);
+            response.EnsureSuccessStatusCode();
         }
     }
 }

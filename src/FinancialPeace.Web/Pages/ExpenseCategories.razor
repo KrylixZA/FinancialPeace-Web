@@ -1,0 +1,40 @@
+@page "/ExpenseCategories"
+@using FinancialPeace.Web.HttpClients
+@using FinancialPeace.Web.Models
+@inject ExpenseCategoriesHttpClient HttpClient
+
+<h1>Expense Categories</h1>
+
+@if (_expenseCategories != null)
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var category in _expenseCategories)
+                {
+                    <tr>
+                        <td>@category.ExpenseCategoryName</td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+
+@code {
+    private IEnumerable<ExpenseCategory> _expenseCategories;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _expenseCategories = await HttpClient.GetExpenseCategoriesAsync();
+    }
+}

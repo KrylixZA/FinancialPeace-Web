@@ -13,6 +13,11 @@ namespace FinancialPeace.Web
 
         public static async Task Main(string[] args)
         {
+            var authenticationHttpClient = new AuthenticationHttpClient(new HttpClient
+            {
+                BaseAddress = new Uri(ApiBaseUrl)
+            });
+            
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddScoped(
@@ -20,13 +25,9 @@ namespace FinancialPeace.Web
                 {
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
                 });
-            builder.Services.AddScoped(
-                _ => new CurrenciesHttpClient(
-                    ApiBaseUrl,
-                    new AuthenticationHttpClient(new HttpClient
-                    {
-                        BaseAddress = new Uri(ApiBaseUrl)
-                    })));
+            builder.Services.AddScoped(_ => new CurrenciesHttpClient(ApiBaseUrl, authenticationHttpClient));
+            builder.Services.AddScoped(_ => new ExpenseCategoriesHttpClient(ApiBaseUrl, authenticationHttpClient));
+            
             await builder.Build().RunAsync();
         }
     }

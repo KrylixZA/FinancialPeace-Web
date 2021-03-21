@@ -1,46 +1,92 @@
 @page "/Currencies"
 @using FinancialPeace.Web.Models
 @using FinancialPeace.Web.HttpClients
+@using FinancialPeace.Web.Models.Requests
 @inject CurrenciesHttpClient HttpClient
 
 <h1>Currencies</h1>
+<div>
+    <h3>Available currencies</h3>
 
-@if (_currencies != null)
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Country</th>
-            <th>Country Currency Code</th>
-            <th>Rand Exchange Rate</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var currency in _currencies)
-                {
-                    <tr>
-                        <td>@currency.Name</td>
-                        <td>@currency.Country</td>
-                        <td>@currency.CountryCurrencyCode</td>
-                        <td>@currency.RandExchangeRate</td>
-                    </tr>
-                }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
+    @if (_currencies != null)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Country</th>
+                <th>Country Currency Code</th>
+                <th>Rand Exchange Rate</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var currency in _currencies)
+            {
+                <tr>
+                    <td>@currency.Name</td>
+                    <td>@currency.Country</td>
+                    <td>@currency.CountryCurrencyCode</td>
+                    <td>@currency.RandExchangeRate</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>
+            <em>Loading...</em>
+        </p>
+    }
+</div>
+
+<div>
+    <h3>Add currency</h3>
+
+    <EditForm Model="@_addCurrencyRequest" OnValidSubmit="@AddCurrencyAsync">
+        <DataAnnotationsValidator />
+        
+        <div class="form-group">
+            <label>
+                Name:
+                <InputText class="form-control" @bind-Value="_addCurrencyRequest.Name"/>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>
+                Country:
+                <InputText class="form-control" @bind-Value="_addCurrencyRequest.Country"/>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>
+                Country currency code:
+                <InputText class="form-control" @bind-Value="_addCurrencyRequest.CountryCurrencyCode"/>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>
+                Rand exchange rate:
+                <InputNumber class="form-control" @bind-Value="_addCurrencyRequest.RandExchangeRate"/>
+            </label>
+        </div>
+
+        <button type="submit">Submit</button>
+    </EditForm>
+</div>
 
 @code {
     private IEnumerable<Currency> _currencies;
+    private AddCurrencyRequest _addCurrencyRequest = new();
 
     protected override async Task OnInitializedAsync()
     {
         _currencies = await HttpClient.GetCurrenciesAsync();
     }
+
+    private async Task AddCurrencyAsync()
+    {
+        await HttpClient.AddCurrencyAsync(_addCurrencyRequest);
+    }
+
 }
