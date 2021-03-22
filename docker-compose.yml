@@ -18,17 +18,6 @@ services:
       - financialpeace
     ports: 
       - 5000:5000
-    restart: any
-
-    financialpeace-web-api:
-    image: krylixza/financialpeace-web-api:latest
-    container_name: financialpeace-web-api
-    depends_on: 
-      - financialpeace-database
-    networks:
-      - financialpeace
-    ports: 
-      - 5000:5000
 
   financialpeace-web:
     image: krylixza/financialpeace-web:latest
