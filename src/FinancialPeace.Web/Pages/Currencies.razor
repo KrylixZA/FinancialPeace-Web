@@ -5,9 +5,16 @@
 @inject CurrenciesHttpClient HttpClient
 @inject IToastService ToastService
 
-<div class="jumbotron">
+<div>
     <h1>Currencies</h1>
+    
+    <div class="btn-group">
+        <button class="btn btn-primary" @onclick="ShowModal">Add Currency</button>
+    </div>
 </div>
+
+<br />
+
 <div>
     @if (_currencies != null)
     {
@@ -41,8 +48,6 @@
     }
 </div>
 
-<button class="btn btn-primary" @onclick="ShowModal">Add Currency</button>
-
 @code {
     [CascadingParameter] public IModalService Modal { get; set; }
     
@@ -58,11 +63,7 @@
         var formModal = Modal.Show<AddCurrencyModal>("Add a new currency");
         var result = await formModal.Result;
 
-        if (result.Cancelled)
-        {
-            Console.WriteLine("Modal was cancelled");
-        }
-        else
+        if (!result.Cancelled)
         {
             await AddCurrencyAsync(result.Data as AddCurrencyRequest);
         }

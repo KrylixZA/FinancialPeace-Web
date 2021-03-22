@@ -4,43 +4,35 @@
 @inject IToastService ToastService
 
 <EditForm Model="@_addCurrencyRequest">
-        <DataAnnotationsValidator />
-        
-        <div class="form-group">
-            <label>
-                Name:
-                <InputText class="form-control" @bind-Value="_addCurrencyRequest.Name"/>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>
-                Country:
-                <InputText class="form-control" @bind-Value="_addCurrencyRequest.Country"/>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>
-                Country currency code:
-                <InputText class="form-control" @bind-Value="_addCurrencyRequest.CountryCurrencyCode"/>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>
-                Rand exchange rate:
-                <InputNumber class="form-control" @bind-Value="_addCurrencyRequest.RandExchangeRate"/>
-            </label>
-        </div>
+    <DataAnnotationsValidator/>
 
-        <button @onclick="SubmitForm" class="btn btn-primary">Submit</button>
-        <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
-    </EditForm>
+    <div class="input-group mb-3">
+        <InputText class="form-control" placeholder="Name" @bind-Value="_addCurrencyRequest.Name"/>
+    </div>
+    
+    <div class="input-group mb-3">
+        <InputText class="form-control" placeholder="Country" @bind-Value="_addCurrencyRequest.Country"/>
+    </div>
+    
+    <div class="input-group mb-3">
+        <InputText class="form-control" placeholder="ISO code" @bind-Value="_addCurrencyRequest.Country"/>
+    </div>
+    
+    <div class="input-group mb-3">
+        <InputNumber class="form-control" placeholder="Rand exchange rate" @bind-Value="_addCurrencyRequest.RandExchangeRate"/>
+    </div>
+
+    <button @onclick="SubmitForm" class="btn btn-primary">Submit</button>
+    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+</EditForm>
 
 
 @code {
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-    
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; }
+
     private readonly AddCurrencyRequest _addCurrencyRequest = new();
-    
-    async Task SubmitForm() =>  await BlazoredModal.CloseAsync(ModalResult.Ok(_addCurrencyRequest));
+
+    async Task SubmitForm() => await BlazoredModal.CloseAsync(ModalResult.Ok(_addCurrencyRequest));
     async Task Cancel() => await BlazoredModal.CancelAsync();
 }

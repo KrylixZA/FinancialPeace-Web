@@ -1,42 +1,96 @@
 @page "/ExpenseCategories"
 @using FinancialPeace.Web.HttpClients
 @using FinancialPeace.Web.Models
+@using FinancialPeace.Web.Models.Requests
 @inject ExpenseCategoriesHttpClient HttpClient
+@inject IToastService ToastService
 
-<div class="jumbotron">
+<div>
     <h1>Expense Categories</h1>
+
+    <EditForm Model="@_addExpenseCategoryRequest">
+        <DataAnnotationsValidator/>
+        
+        <div class="input-group mb-3">
+            <InputText class="form-control" placeholder="Expense category" @bind-Value="_addExpenseCategoryRequest.ExpenseCategoryName"/>
+            <div class="input-group-append">
+                <button @onclick="AddExpenseCategoryAsync" class="btn btn-primary">Add expense category</button>
+            </div>
+        </div>
+    </EditForm>
 </div>
 
-@if (_expenseCategories != null)
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var category in _expenseCategories)
-                {
-                    <tr>
-                        <td>@category.ExpenseCategoryName</td>
-                    </tr>
-                }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
+<br/>
+
+<div>
+    @if (_expenseCategories != null)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var category in _expenseCategories)
+            {
+                <tr>
+                    <td>@category.ExpenseCategoryName</td>
+                    <td><button class="btn btn-danger btn-sm" @onclick="async() => await DeleteExpenseCategoryAsync(category.ExpenseCategoryId)">-</button></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>
+            <em>Loading...</em>
+        </p>
+    }
+</div>
 
 @code {
     private IEnumerable<ExpenseCategory> _expenseCategories;
-    
+    private AddExpenseCategoryRequest _addExpenseCategoryRequest = new();
+
     protected override async Task OnInitializedAsync()
     {
-        _expenseCategories = await HttpClient.GetExpenseCategoriesAsync();
+        await GetGetExpenseCategoriesForUserAsync();
+    }
+
+    private async Task AddExpenseCategoryAsync()
+    {
+        try
+        {
+            await HttpClient.AddExpenseCategoryAsync(_addExpenseCategoryRequest);
+            ToastService.ShowSuccess("Expense category added successfully.");
+            await GetGetExpenseCategoriesForUserAsync();
+            _addExpenseCategoryRequest = new AddExpenseCategoryRequest();
+        }
+        catch
+        {
+            ToastService.ShowError("An error occurred while adding the expense category.");
+        }
+    }
+
+    private async Task DeleteExpenseCategoryAsync(Guid expenseCategoryId)
+    {
+        try
+        {
+            await HttpClient.DeleteExpenseCategoryAsync(expenseCategoryId);
+            ToastService.ShowSuccess("Expense category deleted successfully.");
+            await GetGetExpenseCategoriesForUserAsync();
+        }
+        catch
+        {
+            ToastService.ShowError("An error occurred while deleting the expense category.");
+        }
+    }
+
+    private async Task GetGetExpenseCategoriesForUserAsync()
+    {
+        _expenseCategories = await HttpClient.GetExpenseCategoriesForUserAsync();
     }
 }
