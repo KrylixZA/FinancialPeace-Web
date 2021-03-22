@@ -1,0 +1,46 @@
+@using FinancialPeace.Web.Models.Requests
+@using FinancialPeace.Web.HttpClients
+@inject CurrenciesHttpClient HttpClient
+@inject IToastService ToastService
+
+<EditForm Model="@_addCurrencyRequest">
+        <DataAnnotationsValidator />
+        
+        <div class="form-group">
+            <label>
+                Name:
+                <InputText class="form-control" @bind-Value="_addCurrencyRequest.Name"/>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>
+                Country:
+                <InputText class="form-control" @bind-Value="_addCurrencyRequest.Country"/>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>
+                Country currency code:
+                <InputText class="form-control" @bind-Value="_addCurrencyRequest.CountryCurrencyCode"/>
+            </label>
+        </div>
+        <div class="form-group">
+            <label>
+                Rand exchange rate:
+                <InputNumber class="form-control" @bind-Value="_addCurrencyRequest.RandExchangeRate"/>
+            </label>
+        </div>
+
+        <button @onclick="SubmitForm" class="btn btn-primary">Submit</button>
+        <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
+    </EditForm>
+
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    
+    private readonly AddCurrencyRequest _addCurrencyRequest = new();
+    
+    async Task SubmitForm() =>  await BlazoredModal.CloseAsync(ModalResult.Ok(_addCurrencyRequest));
+    async Task Cancel() => await BlazoredModal.CancelAsync();
+}

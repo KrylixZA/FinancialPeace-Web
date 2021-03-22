@@ -21,7 +21,7 @@ namespace FinancialPeace.Web.Models
         public string Name { get; set; } = null!;
 
         [JsonProperty("country", NullValueHandling = NullValueHandling.Ignore)]
-        public string? Country { get; set; }
+        public string Country { get; set; }
 
         [Required]
         [JsonProperty("randExchangeRate", Required = Required.Always)]

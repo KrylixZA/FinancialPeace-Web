@@ -21,7 +21,7 @@ namespace FinancialPeace.Web.HttpClients
             _authenticationHttpClient = authenticationHttpClient;
         }
 
-        public async Task<IEnumerable<ExpenseCategory>?> GetExpenseCategoriesAsync()
+        public async Task<IEnumerable<ExpenseCategory>> GetExpenseCategoriesAsync()
         {
             var token = await _authenticationHttpClient.GetTokenAsync();
             var request = new HttpRequestMessage

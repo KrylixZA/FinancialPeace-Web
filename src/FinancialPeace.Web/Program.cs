@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Blazored.Modal;
 using Blazored.Toast;
 using FinancialPeace.Web.HttpClients;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -22,6 +23,7 @@ namespace FinancialPeace.Web
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddBlazoredToast();
+            builder.Services.AddBlazoredModal();
             builder.Services.AddScoped(
                 _ => new HttpClient
                 {

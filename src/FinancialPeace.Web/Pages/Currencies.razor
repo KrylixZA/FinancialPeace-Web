@@ -5,11 +5,10 @@
 @inject CurrenciesHttpClient HttpClient
 @inject IToastService ToastService
 
-<h1>Currencies</h1>
-<hr />
+<div class="jumbotron">
+    <h1>Currencies</h1>
+</div>
 <div>
-    <h3>Available currencies</h3>
-
     @if (_currencies != null)
     {
         <table class="table">
@@ -41,59 +40,41 @@
         </p>
     }
 </div>
-<hr/>
-<div>
-    <h3>Add currency</h3>
 
-    <EditForm Model="@_addCurrencyRequest" OnValidSubmit="@AddCurrencyAsync">
-        <DataAnnotationsValidator />
-        
-        <div class="form-group">
-            <label>
-                Name:
-                <InputText class="form-control" @bind-Value="_addCurrencyRequest.Name"/>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>
-                Country:
-                <InputText class="form-control" @bind-Value="_addCurrencyRequest.Country"/>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>
-                Country currency code:
-                <InputText class="form-control" @bind-Value="_addCurrencyRequest.CountryCurrencyCode"/>
-            </label>
-        </div>
-        <div class="form-group">
-            <label>
-                Rand exchange rate:
-                <InputNumber class="form-control" @bind-Value="_addCurrencyRequest.RandExchangeRate"/>
-            </label>
-        </div>
-
-        <button class="btn btn-primary" type="submit">Submit</button>
-    </EditForm>
-</div>
+<button class="btn btn-primary" @onclick="ShowModal">Add Currency</button>
 
 @code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+    
     private IEnumerable<Currency> _currencies;
-    private AddCurrencyRequest _addCurrencyRequest = new();
 
     protected override async Task OnInitializedAsync()
     {
         _currencies = await HttpClient.GetCurrenciesAsync();
     }
+    
+    private async Task ShowModal()
+    {
+        var formModal = Modal.Show<AddCurrencyModal>("Add a new currency");
+        var result = await formModal.Result;
 
-    private async Task AddCurrencyAsync()
+        if (result.Cancelled)
+        {
+            Console.WriteLine("Modal was cancelled");
+        }
+        else
+        {
+            await AddCurrencyAsync(result.Data as AddCurrencyRequest);
+        }
+    }
+
+    private async Task AddCurrencyAsync(AddCurrencyRequest request)
     {
         try
         {
-            await HttpClient.AddCurrencyAsync(_addCurrencyRequest);
+            await HttpClient.AddCurrencyAsync(request);
             ToastService.ShowSuccess("Currency added successfully.");
             _currencies = await HttpClient.GetCurrenciesAsync();
-            _addCurrencyRequest = new AddCurrencyRequest();
         }
         catch
         {

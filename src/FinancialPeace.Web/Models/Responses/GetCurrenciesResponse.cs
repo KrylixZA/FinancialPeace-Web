@@ -6,6 +6,6 @@ namespace FinancialPeace.Web.Models.Responses
     public class GetCurrencyResponse
     {
         [JsonProperty("currencies", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public IEnumerable<Currency>? Currencies { get; set; }
+        public IEnumerable<Currency> Currencies { get; set; }
     }
 }

@@ -6,6 +6,6 @@ namespace FinancialPeace.Web.Models.Responses
     public class GetExpenseCategoriesResponse
     {
         [JsonProperty("expenseCategories", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public IEnumerable<ExpenseCategory>? ExpenseCategories { get; set; }
+        public IEnumerable<ExpenseCategory> ExpenseCategories { get; set; }
     }
 }

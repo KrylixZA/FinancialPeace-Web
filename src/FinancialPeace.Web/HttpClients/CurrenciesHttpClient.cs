@@ -23,7 +23,7 @@ namespace FinancialPeace.Web.HttpClients
             _authenticationHttpClient = authenticationHttpClient;
         }
 
-        public async Task<IEnumerable<Currency>?> GetCurrenciesAsync()
+        public async Task<IEnumerable<Currency>> GetCurrenciesAsync()
         {
             var token = await _authenticationHttpClient.GetTokenAsync();
             var request = new HttpRequestMessage
