@@ -128,7 +128,7 @@
             ToastService.ShowSuccess("Expense updated successfully.");
             await GetExpensesForUserAsync();
         }
-        catch (Exception ex)
+        catch
         {
             ToastService.ShowError("An error occurred while updating the expense.");
         }

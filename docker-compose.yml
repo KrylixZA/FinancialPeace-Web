@@ -26,7 +26,7 @@ services:
       - financialpeace-database
       - financialpeace-web-api
     ports:
-      - 50000:50000
+      - 50000:80
 
 networks:
   financialpeace:

@@ -20,13 +20,13 @@ services:
       - 5000:5000
 
   financialpeace-web:
-    image: krylixza/financialpeace-web:latest-arm
+    image: krylixza/financialpeace-web:latest
     container_name: financialpeace-web
     depends_on: 
       - financialpeace-database
       - financialpeace-web-api
     ports:
-      - 50000:50000
+      - 50000:80
 
 networks:
   financialpeace:

@@ -69,7 +69,6 @@ jobs:
         docker push krylixza/financialpeace-web:latest
         docker logout
 
-  docker_arm:
     runs-on: ubuntu-latest
 
     steps:
