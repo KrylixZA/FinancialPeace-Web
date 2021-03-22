@@ -57,7 +57,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetGetExpenseCategoriesForUserAsync();
+        await GetExpenseCategoriesForUserAsync();
+    }
+    
+    private async Task GetExpenseCategoriesForUserAsync()
+    {
+        _expenseCategories = await HttpClient.GetExpenseCategoriesForUserAsync();
     }
 
     private async Task AddExpenseCategoryAsync()
@@ -66,7 +71,7 @@
         {
             await HttpClient.AddExpenseCategoryAsync(_addExpenseCategoryRequest);
             ToastService.ShowSuccess("Expense category added successfully.");
-            await GetGetExpenseCategoriesForUserAsync();
+            await GetExpenseCategoriesForUserAsync();
             _addExpenseCategoryRequest = new AddExpenseCategoryRequest();
         }
         catch
@@ -81,16 +86,11 @@
         {
             await HttpClient.DeleteExpenseCategoryAsync(expenseCategoryId);
             ToastService.ShowSuccess("Expense category deleted successfully.");
-            await GetGetExpenseCategoriesForUserAsync();
+            await GetExpenseCategoriesForUserAsync();
         }
         catch
         {
             ToastService.ShowError("An error occurred while deleting the expense category.");
         }
-    }
-
-    private async Task GetGetExpenseCategoriesForUserAsync()
-    {
-        _expenseCategories = await HttpClient.GetExpenseCategoriesForUserAsync();
     }
 }

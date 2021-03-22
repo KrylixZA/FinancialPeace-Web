@@ -1,7 +1,9 @@
 @page "/Budgets"
 @using FinancialPeace.Web.Models
 @using FinancialPeace.Web.HttpClients
+@using FinancialPeace.Web.Models.Requests
 @inject BudgetsHttpClient HttpClient
+@inject IToastService ToastService
 
 <div>
     <h1>Budget</h1>
@@ -20,6 +22,24 @@
             </tr>
             </thead>
             <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Expense category">
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">@_userExpenses.First().CountryCurrencyCode</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Amount">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" @onclick="async () => await CreateExpenseForUserAsync(new CreateExpenseRequest())">Add</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
             @foreach (var expense in _userExpenses)
             {
                 <tr>
@@ -31,8 +51,8 @@
                             </div>
                             <input type="text" class="form-control" value="@expense.Value">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button">Update</button>
-                                <button class="btn btn-outline-secondary" type="button">Remove</button>
+                                <button class="btn btn-info" @onclick="async () => await UpdateExpenseForUserAsync(expense.ExpenseId, new UpdateExpenseRequest())">Update</button>
+                                <button class="btn btn-danger" @onclick="async () => await DeleteExpenseForUserAsync(expense.ExpenseId)">Remove</button>
                             </div>
                         </div>
                     </td>
@@ -54,7 +74,54 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await GetExpensesForUserAsync();
+    }
+
+    private async Task GetExpensesForUserAsync()
+    {
         _userExpenses = await HttpClient.GetBudgetForUserAsync();
+    }
+
+    private async Task CreateExpenseForUserAsync(CreateExpenseRequest request)
+    {
+        try
+        {
+            await HttpClient.CreateExpenseForUserAsync(request);
+            ToastService.ShowSuccess("Expense added to the budget successfully.");
+            await GetExpensesForUserAsync();
+        }
+        catch
+        {
+            ToastService.ShowError("An error occurred while adding the expense to the budget.");
+        }
+    }
+
+    private async Task DeleteExpenseForUserAsync(Guid expenseId)
+    {
+        try
+        {
+            await HttpClient.DeleteExpenseForUserAsync(expenseId);
+            ToastService.ShowSuccess("Expense delete successfully.");
+            await GetExpensesForUserAsync();
+        }
+        catch
+        {
+            ToastService.ShowError("An error occurred while delete the expense.");
+        }
+    }
+
+    private async Task UpdateExpenseForUserAsync(Guid expenseId, UpdateExpenseRequest request)
+    {
+        try
+        {
+            await HttpClient.UpdateExpenseForUserAsync(expenseId, request);
+            ToastService.ShowSuccess("Expense updated successfully.");
+            await GetExpensesForUserAsync();
+        }
+        catch
+        {
+            ToastService.ShowError("An error occurred while updating the expense.");
+        }
     }
 
 }
