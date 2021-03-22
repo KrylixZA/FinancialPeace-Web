@@ -68,34 +68,3 @@ jobs:
         docker push krylixza/financialpeace-web:${{ steps.define_build_number.outputs.BUILD_NUMBER }}
         docker push krylixza/financialpeace-web:latest
         docker logout
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: 'Checkout'
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
-    - name: Define build number
-      id: define_build_number
-      run: |
-        buildNumber=$(echo ${{ env.BUILD_VERSION }})
-        branchName=$(echo ${{ env.BRANCH_NAME }} | sed 's:.*/::')
-        buildId=$buildNumber-$branchName
-        if [[ "$branchName" == "master" ]]; then
-          buildId=$buildNumber
-        fi
-        echo $buildNumber
-        echo $branchName
-        echo $buildId
-        echo "##[set-output name=BUILD_NUMBER;]$(echo $buildId)"
-        
-    - name: Build & push Docker image
-      working-directory: .
-      run: |
-        docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-        docker build -f Dockerfile.Arm -t krylixza/financialpeace-web:${{ steps.define_build_number.outputs.BUILD_NUMBER }}-arm -t krylixza/financialpeace-web:latest-arm .
-        docker push krylixza/financialpeace-web:${{ steps.define_build_number.outputs.BUILD_NUMBER }}-arm
-        docker push krylixza/financialpeace-web:latest-arm
-        docker logout
