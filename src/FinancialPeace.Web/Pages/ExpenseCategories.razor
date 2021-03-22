@@ -7,17 +7,17 @@
 
 <div>
     <h1>Expense Categories</h1>
-
-    <EditForm Model="@_addExpenseCategoryRequest">
-        <DataAnnotationsValidator/>
-        
-        <div class="input-group mb-3">
-            <InputText class="form-control" placeholder="Expense category" @bind-Value="_addExpenseCategoryRequest.ExpenseCategoryName"/>
-            <div class="input-group-append">
-                <button @onclick="AddExpenseCategoryAsync" class="btn btn-primary">Add expense category</button>
-            </div>
-        </div>
-    </EditForm>
+    @* *@
+    @* <EditForm Model="@_addExpenseCategoryRequest"> *@
+    @*     <DataAnnotationsValidator/> *@
+    @* *@
+    @*     <div class="input-group mb-3"> *@
+    @*         <InputText class="form-control" placeholder="Expense category" @bind-Value="_addExpenseCategoryRequest.ExpenseCategoryName"/> *@
+    @*         <div class="input-group-append"> *@
+    @*             <button @onclick="AddExpenseCategoryAsync" class="btn btn-primary">Add expense category</button> *@
+    @*         </div> *@
+    @*     </div> *@
+    @* </EditForm> *@
 </div>
 
 <br/>
@@ -29,15 +29,30 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th></th>
             </tr>
             </thead>
             <tbody>
+            <tr>
+                <td>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Expense category" @bind="@_addExpenseCategoryRequest.ExpenseCategoryName"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-success" @onclick="AddExpenseCategoryAsync">Submit</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
             @foreach (var category in _expenseCategories)
             {
                 <tr>
-                    <td>@category.ExpenseCategoryName</td>
-                    <td><button class="btn btn-danger btn-sm" @onclick="async() => await DeleteExpenseCategoryAsync(category.ExpenseCategoryId)">-</button></td>
+                    <td>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" value="@category.ExpenseCategoryName" readonly />
+                            <div class="input-group-append">
+                                 <button class="btn btn-danger" @onclick="async () => await DeleteExpenseCategoryAsync(category.ExpenseCategoryId)">Remove</button>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             }
             </tbody>
@@ -59,7 +74,7 @@
     {
         await GetExpenseCategoriesForUserAsync();
     }
-    
+
     private async Task GetExpenseCategoriesForUserAsync()
     {
         _expenseCategories = await HttpClient.GetExpenseCategoriesForUserAsync();

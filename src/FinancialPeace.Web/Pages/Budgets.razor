@@ -25,17 +25,17 @@
             <tr>
                 <td>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Expense category">
+                        <input type="text" class="form-control" placeholder="Expense category" @bind="@_createExpenseRequest.ExpenseCategoryName"/>
                     </div>
                 </td>
                 <td>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">@_userExpenses.First().CountryCurrencyCode</span>
+                            <span class="input-group-text">ZAR</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Amount">
+                        <input type="number" class="form-control" placeholder="Amount" @bind="@_createExpenseRequest.Value"/>
                         <div class="input-group-append">
-                            <button class="btn btn-primary" @onclick="async () => await CreateExpenseForUserAsync(new CreateExpenseRequest())">Add</button>
+                            <button class="btn btn-success" @onclick="CreateExpenseForUserAsync">Add</button>
                         </div>
                     </div>
                 </td>
@@ -47,11 +47,11 @@
                     <td>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">@expense.CountryCurrencyCode</span>
+                                <span class="input-group-text">ZAR</span>
                             </div>
-                            <input type="text" class="form-control" value="@expense.Value">
+                            <input type="number" class="form-control" @bind="@expense.Value">
                             <div class="input-group-append">
-                                <button class="btn btn-info" @onclick="async () => await UpdateExpenseForUserAsync(expense.ExpenseId, new UpdateExpenseRequest())">Update</button>
+                                <button class="btn btn-info" @onclick="async () => await UpdateExpenseForUserAsync(expense.ExpenseId)">Update</button>
                                 <button class="btn btn-danger" @onclick="async () => await DeleteExpenseForUserAsync(expense.ExpenseId)">Remove</button>
                             </div>
                         </div>
@@ -71,6 +71,7 @@
 
 @code {
     private IEnumerable<Expense> _userExpenses;
+    private CreateExpenseRequest _createExpenseRequest = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -82,13 +83,15 @@
         _userExpenses = await HttpClient.GetBudgetForUserAsync();
     }
 
-    private async Task CreateExpenseForUserAsync(CreateExpenseRequest request)
+    private async Task CreateExpenseForUserAsync()
     {
         try
         {
-            await HttpClient.CreateExpenseForUserAsync(request);
+            _createExpenseRequest.CountryCurrencyCode = "ZAR";
+            await HttpClient.CreateExpenseForUserAsync(_createExpenseRequest);
             ToastService.ShowSuccess("Expense added to the budget successfully.");
             await GetExpensesForUserAsync();
+            _createExpenseRequest = new CreateExpenseRequest();
         }
         catch
         {
@@ -110,15 +113,22 @@
         }
     }
 
-    private async Task UpdateExpenseForUserAsync(Guid expenseId, UpdateExpenseRequest request)
+    private async Task UpdateExpenseForUserAsync(Guid expenseId)
     {
         try
         {
+            var expense = _userExpenses.First(p => p.ExpenseId == expenseId);
+            var request = new UpdateExpenseRequest
+            {
+                Value = expense.Value,
+                CountryCurrencyCode = expense.CountryCurrencyCode,
+                ExpenseCategoryName = expense.DisplayName
+            };
             await HttpClient.UpdateExpenseForUserAsync(expenseId, request);
             ToastService.ShowSuccess("Expense updated successfully.");
             await GetExpensesForUserAsync();
         }
-        catch
+        catch (Exception ex)
         {
             ToastService.ShowError("An error occurred while updating the expense.");
         }

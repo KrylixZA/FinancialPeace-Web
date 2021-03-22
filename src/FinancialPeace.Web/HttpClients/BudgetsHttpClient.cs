@@ -92,7 +92,7 @@ namespace FinancialPeace.Web.HttpClients
                     {"Authorization", $"Bearer {token}"}
                 },
                 Method = HttpMethod.Patch,
-                RequestUri = new Uri($"{_apiBaseUrl}/{ControllerRoute}/user/{_userId}"),
+                RequestUri = new Uri($"{_apiBaseUrl}/{ControllerRoute}/user/{_userId}/expense/{expenseId}"),
                 Content = new StringContent(
                     JsonConvert.SerializeObject(request),
                     Encoding.UTF8,
