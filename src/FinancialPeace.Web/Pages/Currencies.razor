@@ -3,8 +3,10 @@
 @using FinancialPeace.Web.HttpClients
 @using FinancialPeace.Web.Models.Requests
 @inject CurrenciesHttpClient HttpClient
+@inject IToastService ToastService
 
 <h1>Currencies</h1>
+<hr />
 <div>
     <h3>Available currencies</h3>
 
@@ -39,7 +41,7 @@
         </p>
     }
 </div>
-
+<hr/>
 <div>
     <h3>Add currency</h3>
 
@@ -71,7 +73,7 @@
             </label>
         </div>
 
-        <button type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </EditForm>
 </div>
 
@@ -86,7 +88,16 @@
 
     private async Task AddCurrencyAsync()
     {
-        await HttpClient.AddCurrencyAsync(_addCurrencyRequest);
+        try
+        {
+            await HttpClient.AddCurrencyAsync(_addCurrencyRequest);
+            ToastService.ShowSuccess("Currency added successfully.");
+            _currencies = await HttpClient.GetCurrenciesAsync();
+            _addCurrencyRequest = new AddCurrencyRequest();
+        }
+        catch
+        {
+            ToastService.ShowError("An error occurred while adding the currency.");
+        }
     }
-
 }

@@ -1,6 +1,12 @@
 ﻿@page "/"
+@inject IToastService ToastService
 
 <h1>Hello, world!</h1>
+
+<button class="btn btn-info" @onclick="@(() => ToastService.ShowInfo("I'm an INFO message"))">Info Toast</button>
+<button class="btn btn-success" @onclick="@(() => ToastService.ShowSuccess("I'm a SUCCESS message with a custom title", "Congratulations!"))">Success Toast</button>
+<button class="btn btn-warning" @onclick="@(() => ToastService.ShowWarning("I'm a WARNING message"))">Warning Toast</button>
+<button class="btn btn-danger" @onclick="@(() => ToastService.ShowError("I'm an ERROR message"))">Error Toast</button>
 
 Welcome to your new app.
 
