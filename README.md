@@ -5,7 +5,7 @@ A Blazor Web Assembly application to serve as a user interface for the Financial
 This application is also built into a [Docker image](Dockerfile) and hosted on [Docker Hub](https://hub.docker.com/repository/docker/krylixza/financialpeace-web).
 
 ## Running the application with the database
-In the repository is a [docker-compose.yml](docker-compose.yml) file. Use this file to launch both the Web API and the database. To do this, simply clone the repository, open your CLI and run:
+In the repository is a [docker-compose.yml](docker-compose.yml) file. Use this file to launch the Web interface, Web API and the database. To do this, simply clone the repository, open your CLI and run:
 
     docker-compose up
 
