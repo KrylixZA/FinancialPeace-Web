@@ -1,0 +1,59 @@
+@page "/Budgets"
+@using FinancialPeace.Web.Models
+@using FinancialPeace.Web.HttpClients
+@inject BudgetsHttpClient HttpClient
+
+<div>
+    <h1>Budget</h1>
+</div>
+
+<br/>
+
+<div>
+    @if (_userExpenses != null)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Expense category</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var expense in _userExpenses)
+            {
+                <tr>
+                    <td>@expense.DisplayName</td>
+                    <td>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">@expense.CountryCurrencyCode</span>
+                            </div>
+                            <input type="text" class="form-control" value="@expense.Value">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button">Update</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>
+            <em>Loading...</em>
+        </p>
+    }
+</div>
+
+@code {
+    private IEnumerable<Expense> _userExpenses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _userExpenses = await HttpClient.GetBudgetForUserAsync();
+    }
+
+}

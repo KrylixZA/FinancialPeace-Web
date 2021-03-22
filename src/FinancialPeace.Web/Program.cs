@@ -30,6 +30,7 @@ namespace FinancialPeace.Web
                     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
                 });
             builder.Services.AddScoped(_ => new CurrenciesHttpClient(ApiBaseUrl, authenticationHttpClient));
+            builder.Services.AddScoped(_ => new BudgetsHttpClient(ApiBaseUrl, authenticationHttpClient));
             builder.Services.AddScoped(_ => new ExpenseCategoriesHttpClient(ApiBaseUrl, authenticationHttpClient));
             
             await builder.Build().RunAsync();
